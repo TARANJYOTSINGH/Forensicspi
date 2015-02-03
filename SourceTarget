@@ -1,0 +1,12 @@
+package gui_pi;
+
+//changing the value of textboxes(source and target)
+public class SourceTarget {
+	public final String source,target;
+	SourceTarget(String source,String target)
+	{
+		this.source=source;
+		this.target=target;
+	}
+  
+}
