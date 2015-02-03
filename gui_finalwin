@@ -1,0 +1,534 @@
+package gui_pi;
+
+
+
+
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.lang.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingWorker;
+import javax.swing.border.BevelBorder;
+
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.SystemColor;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+public class gui_finalwin {
+	 
+   
+	private JFrame frame;
+	private JTextField textField;
+	private JTextField target;
+	private Usbcheck usbcheck;
+	private JTextField cloneSource;
+	private JTextField cloneTarget;
+	private JTextField wipeSource;
+	private JTextField formatSource;
+	private String activePanel="main";	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					gui_finalwin window = new gui_finalwin();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public gui_finalwin() throws Exception{
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		final JPanel main = new JPanel();
+		final JPanel image = new JPanel();
+		final JPanel clone = new JPanel();
+		final JPanel Wipe = new JPanel();
+		final JPanel format=new JPanel();
+	
+
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(new CardLayout(0, 0));
+		
+	// main panel
+		frame.getContentPane().add(main, "name_78402972558627");
+		main.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		main.setBackground(new Color(51, 51, 51));
+		main.setLayout(null);
+		JLabel lblLogo = new JLabel("Mobile Forensics Device  by Luna Group");
+		lblLogo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		//lblLogo.setIcon(new ImageIcon(gui.class.getResource("/img/windows_icon.png")));
+		lblLogo.setForeground(new Color(255, 255, 0));
+		lblLogo.setBounds(62, 27, 321, 15);
+		main.add(lblLogo);
+		
+		JButton btnImage = new JButton("Image");
+		btnImage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				 image.setVisible(true);
+				 main.setVisible(false);
+				 activePanel="image";
+		           (usbcheck = new Usbcheck()).execute();
+		          
+				  
+				
+			}
+		});
+		btnImage.setForeground(new Color(255, 255, 255));
+		btnImage.setFont(new Font("Dialog", Font.BOLD, 20));
+		btnImage.setBackground(new Color(70, 130, 180));
+		btnImage.setBounds(0, 50, 219, 80);
+		main.add(btnImage);
+		
+		JButton btnClone = new JButton("Clone");
+		btnClone.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				clone.setVisible(true);
+				 main.setVisible(false);
+				 activePanel="clone";
+				  (usbcheck = new Usbcheck()).execute();
+			}
+		});
+		btnClone.setFont(new Font("Dialog", Font.BOLD, 20));
+		btnClone.setForeground(new Color(255, 255, 255));
+		btnClone.setBackground(new Color(70, 130, 180));
+		btnClone.setBounds(219, 50, 219, 80);
+		main.add(btnClone);
+		
+		JButton btnFornatButton = new JButton("Format");
+		btnFornatButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				format.setVisible(true);
+                 main.setVisible(false);
+				  activePanel="format";
+
+                 (usbcheck = new Usbcheck()).execute();
+			}
+		});
+		btnFornatButton.setFont(new Font("Dialog", Font.BOLD, 20));
+		btnFornatButton.setForeground(new Color(255, 255, 255));
+		btnFornatButton.setBackground(new Color(70, 130, 180));
+		btnFornatButton.setBounds(0, 130, 219, 80);
+		main.add(btnFornatButton);
+		
+		JButton btnWipe = new JButton("Wipe");
+		btnWipe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+                   Wipe.setVisible(true);
+                   main.setVisible(false);
+                   activePanel="wipe";
+                   (usbcheck = new Usbcheck()).execute();
+			}
+		});
+		btnWipe.setFont(new Font("Dialog", Font.BOLD, 20));
+		btnWipe.setForeground(new Color(255, 255, 255));
+		btnWipe.setBackground(new Color(70, 130, 180));
+		btnWipe.setBounds(219, 130, 219, 80);
+		main.add(btnWipe);
+		
+		JButton btnShotdown = new JButton("Shut Down");
+		btnShotdown.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String str =arg0.getActionCommand();
+				if(JOptionPane.showConfirmDialog(frame,"Are you sure you want to quit", "warning",JOptionPane.OK_CANCEL_OPTION) == 0)
+								System.exit(0);
+			}
+		});
+		btnShotdown.setFont(new Font("Dialog", Font.BOLD, 14));
+		btnShotdown.setForeground(new Color(255, 255, 255));
+		btnShotdown.setBackground(new Color(220, 20, 60));
+		
+		btnShotdown.setBounds(0, 210, 438, 50);
+		main.add(btnShotdown);
+		
+		JLabel lblNewLabel_1 = new JLabel("New label");
+		lblNewLabel_1.setIcon(new ImageIcon(gui_finalwin.class.getResource("/image/logo.png")));
+		lblNewLabel_1.setBounds(354, 18, 70, 31);
+		main.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("New label");
+		lblNewLabel_2.setBounds(354, 54, 70, 15);
+		main.add(lblNewLabel_2);
+		
+		
+	
+		//Image panel
+	
+		frame.getContentPane().add(image, "name_78402985954585");
+		image.setBackground(new Color(70, 130, 180));
+		image.setBounds(0, 50, 438, 210);
+		
+		image.setLayout(null);
+		
+		JLabel lblSource = new JLabel("Source");
+		lblSource.setFont(new Font("Dialog", Font.BOLD, 16));
+		lblSource.setForeground(new Color(255, 255, 255));
+		lblSource.setBounds(41, 59, 70, 32);
+		image.add(lblSource);
+		
+		JLabel lblTarget = new JLabel("Target");
+		lblTarget.setFont(new Font("Dialog", Font.BOLD, 16));
+		lblTarget.setForeground(new Color(255, 255, 255));
+		lblTarget.setBounds(41, 123, 70, 32);
+		image.add(lblTarget);
+		
+		target = new JTextField();
+		target.setBackground(new Color(255, 255, 255));
+		target.setBounds(119, 128, 273, 28);
+		image.add(target);
+		
+		JButton btnStartImage = new JButton("Start Image");
+		btnStartImage.setFont(new Font("Dialog", Font.BOLD, 18));
+		btnStartImage.setForeground(new Color(255, 255, 255));
+		btnStartImage.setBackground(new Color(0, 191, 255));
+		btnStartImage.addActionListener (new ActionListener()  {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			
+				String commands = new String();
+   try{
+		    	commands="sudo dd if=/dev/sda1 of=/dev/sdb1";                   
+		    	// execute the command
+		    	
+		    	Process pb = Runtime.getRuntime().exec(commands);
+		    	
+		    	JOptionPane.showMessageDialog(frame,"Successfully Copied Files", "Image",JOptionPane.INFORMATION_MESSAGE);
+			}
+   catch(Exception e){ System.out.println(e);
+			}
+			}
+		});
+		
+		btnStartImage.setBounds(20, 201, 220, 49);
+		image.add(btnStartImage);
+		
+		JButton Home = new JButton("Home");
+		Home.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setHome(image,main);
+				usbcheck.cancel(true);
+			}
+		});
+		Home.setForeground(Color.WHITE);
+		Home.setFont(new Font("Dialog", Font.BOLD, 18));
+		Home.setBackground(Color.RED);
+		Home.setBounds(260, 201, 164, 49);
+		image.add(Home);
+		
+		textField = new JTextField();
+		textField.setBounds(121, 59, 271, 29);
+		image.add(textField);
+		textField.setColumns(10);
+	
+		
+// clone panel		
+		
+		frame.getContentPane().add(clone, "name_78402998180126");
+		clone.setBounds(0, 50, 438, 210);
+		
+		clone.setBackground(new Color(0, 128, 128));
+		clone.setLayout(null);
+		
+		JLabel lblSource_1 = new JLabel("Source");
+		lblSource_1.setFont(new Font("Dialog", Font.BOLD, 16));
+		lblSource_1.setForeground(new Color(255, 255, 255));
+		lblSource_1.setBounds(48, 61, 70, 29);
+		clone.add(lblSource_1);
+		
+		JLabel lblTarget_1 = new JLabel("Target");
+		lblTarget_1.setFont(new Font("Dialog", Font.BOLD, 16));
+		lblTarget_1.setForeground(new Color(255, 255, 255));
+		lblTarget_1.setBounds(48, 121, 70, 22);
+		clone.add(lblTarget_1);
+		
+	    cloneSource = new JTextField();
+		cloneSource.setBackground(new Color(255, 255, 255));
+		cloneSource.setBounds(136, 64, 253, 28);
+		clone.add(cloneSource);
+		
+		cloneTarget = new JTextField();
+		cloneTarget.setBackground(new Color(255, 255, 255));
+		cloneTarget.setBounds(136, 121, 253, 28);
+		clone.add(cloneTarget);
+		
+		JButton btnStartClone = new JButton("Start Clone");
+		btnStartClone.setBackground(new Color(60, 179, 113));
+		btnStartClone.setFont(new Font("Dialog", Font.BOLD, 18));
+		btnStartClone.setForeground(new Color(255, 255, 255));
+		btnStartClone.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+						
+					
+						String commands = new String();
+		   try{
+				    	commands="sudo cp -R /media/D83C-BD14 /media/SUKUN_";
+		                    
+				    	// execute the command
+				    	
+				    	Process pb = Runtime.getRuntime().exec(commands);
+				    	
+				    	JOptionPane.showMessageDialog(frame,"Successfully Copied Files", "Image",JOptionPane.INFORMATION_MESSAGE);
+					}
+		   catch(Exception e){ System.out.println(e);
+					}
+					}
+				});
+	
+		btnStartClone.setBounds(20, 201, 220, 49);
+		clone.add(btnStartClone);
+		
+		JButton CloneHome = new JButton("Home");
+		CloneHome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setHome(clone , main);
+				usbcheck.cancel(true);
+			}
+		});
+		CloneHome.setForeground(Color.WHITE);
+		CloneHome.setFont(new Font("Dialog", Font.BOLD, 18));
+		CloneHome.setBackground(Color.RED);
+		CloneHome.setBounds(260, 201, 164, 49);
+		clone.add(CloneHome);
+		
+		// wipe panel
+		
+		
+		
+	
+		frame.getContentPane().add(Wipe, "name_78403009858022");
+		
+		Wipe.setBounds(0, 50, 438, 210);
+		
+		Wipe.setForeground(new Color(255, 255, 255));
+		Wipe.setLayout(null);
+		Wipe.setBackground(new Color(139, 69, 19));
+		
+		JLabel Device_2 = new JLabel("Device");
+		Device_2.setForeground(Color.WHITE);
+		Device_2.setFont(new Font("Dialog", Font.BOLD, 18));
+		Device_2.setBounds(37, 107, 68, 22);
+		Wipe.add(Device_2);
+		
+		wipeSource = new JTextField();
+		wipeSource.setBackground(Color.WHITE);
+		wipeSource.setBounds(121, 107, 221, 28);
+		Wipe.add(wipeSource);
+		
+		JButton btnStartWipe = new JButton("Start Wipe");
+		btnStartWipe.setForeground(Color.WHITE);
+		btnStartWipe.setFont(new Font("Dialog", Font.BOLD, 16));
+		btnStartWipe.setBackground(new Color(255, 127, 80));
+		btnStartWipe.setBounds(20, 201, 220, 49);
+		Wipe.add(btnStartWipe);
+		btnStartWipe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String str =arg0.getActionCommand();
+				if(JOptionPane.showConfirmDialog(frame,"Wipe will erase whole data!!!!!! still want to coninue", "warning",JOptionPane.OK_CANCEL_OPTION) == 0)
+				{
+				String commands = new String();
+				   try{
+						    	commands="sudo rm -rf /media/";
+				                    
+						    	// execute the command
+						    	
+						    	Process pb = Runtime.getRuntime().exec(commands);
+						    	
+						    	JOptionPane.showMessageDialog(frame,"Successfully deleted all files ", "Wipe",JOptionPane.INFORMATION_MESSAGE);
+							}
+				   catch(Exception e){ System.out.println(e);
+							}
+							}}
+						});
+		
+		JButton WipeHome = new JButton("Home");
+		WipeHome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setHome(Wipe,main);
+				usbcheck.cancel(true);
+			}
+		});
+		WipeHome.setForeground(Color.WHITE);
+		WipeHome.setFont(new Font("Dialog", Font.BOLD, 18));
+		WipeHome.setBackground(Color.RED);
+		WipeHome.setBounds(260, 201, 164, 49);
+		Wipe.add(WipeHome);
+		
+		// format panel
+		
+		frame.getContentPane().add(format, "name_78403020929157");
+		format.setBackground(new Color(106, 90, 205));
+		format.setBounds(0, 50, 438, 210);
+		
+		format.setLayout(null);
+		
+		JLabel lblDevice = new JLabel("Device");
+		lblDevice.setBounds(55, 108, 68, 22);
+		lblDevice.setFont(new Font("Dialog", Font.BOLD, 18));
+		lblDevice.setForeground(new Color(255, 255, 255));
+		format.add(lblDevice);
+		
+		formatSource = new JTextField();
+		formatSource.setBackground(new Color(255, 255, 255));
+		formatSource.setBounds(133, 102, 221, 28);
+		format.add(formatSource);
+		
+		JButton btnStartFormat = new JButton("Start Format");
+		btnStartFormat.setBackground(new Color(186, 85, 211));
+		btnStartFormat.setFont(new Font("Dialog", Font.BOLD, 16));
+		btnStartFormat.setForeground(new Color(255, 255, 255));
+		btnStartFormat.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String str =arg0.getActionCommand();
+				if(JOptionPane.showConfirmDialog(frame,"Format will erase whole data!!!!!! still want to coninue", "warning",JOptionPane.OK_CANCEL_OPTION) == 0)
+				{
+				String commands = new String();
+				   try{
+						    	commands="sudo mkfs.vfat -n 'pi' -I /dev/sda1";
+				                    
+						    	// execute the command
+						    	
+						    	Process pb = Runtime.getRuntime().exec(commands);
+						    	
+						    	JOptionPane.showMessageDialog(frame,"Successfully deleted all files ", "Format",JOptionPane.INFORMATION_MESSAGE);
+							}
+				   catch(Exception e){ System.out.println(e);
+							}
+							}}
+						});
+			
+		btnStartFormat.setBounds(20, 201, 220, 49);
+		format.add(btnStartFormat);
+		JButton FormatHome = new JButton("Home");
+		FormatHome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setHome(format,main);
+				usbcheck.cancel(true);
+			}
+		});
+		FormatHome.setForeground(Color.WHITE);
+		FormatHome.setFont(new Font("Dialog", Font.BOLD, 18));
+		FormatHome.setBackground(Color.RED);
+		FormatHome.setBounds(260, 201, 164, 49);
+		format.add(FormatHome);
+		
+		
+	}
+
+	public static void setHome(JPanel childPanel ,JPanel mainPanel) {
+		childPanel.setVisible(false);
+		mainPanel.setVisible(true);
+		
+		
+		// TODO Auto-generated method stub
+		
+	}
+
+ class Usbcheck extends SwingWorker<Void, SourceTarget> {
+    @Override
+    protected Void doInBackground() throws IOException {
+    	String source = "No Source Device";
+    	String target = "NO Target Device";
+    	boolean sourceisAttached=false;
+    	boolean targetisAttached=false;
+    	System.out.println("Detecting USB Devices...");
+
+    	// build the system command we want to run
+    	List<String> commands = new ArrayList<String>();
+
+    	commands.add("df");
+
+    	// execute the command
+    	while(!isCancelled())
+    	{
+    	ProcessBuilder pb = new ProcessBuilder(commands);
+    	Process process = pb.start();
+    	 StringBuilder out = new StringBuilder();
+    	        BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    	        String line = null, previous = null;
+    	        while ((line = br.readLine()) != null)
+    	             out.append(line);
+
+    	           if(out.indexOf("sda1") >-1 && sourceisAttached==false)
+    	           {
+    	          source="Detected Source device";
+    	          sourceisAttached=false;
+    	          System.out.println("HEllo");}
+    	         
+    	                if(out.indexOf("sdb1")>-1 &&  targetisAttached==false)
+    	                {    	target="Detected Target Device";
+    	                targetisAttached=true;
+    	                }
+    	             
+    	           else if(out.indexOf("sda1")==-1 && sourceisAttached==false)
+                          {         source="No Source Device";sourceisAttached=true;}
+                   else if(out.indexOf("sdb1")==-1 && targetisAttached==true)
+ 	                        {target="NO Target Device";
+ 	                       targetisAttached=false;}
+    	
+    	
+    	
+    	        publish(new SourceTarget(source,target));
+    	      
+    	        // wait before looping
+    	}
+ 
+    	     
+    	     return null;
+    	   
+    }
+
+
+    @Override
+    protected void process(List<SourceTarget> status) {
+       SourceTarget sourcestatus = status.get(status.size() - 1);
+       if(activePanel.equals("clone"))
+       {cloneSource.setText(sourcestatus.source);
+       cloneTarget.setText(sourcestatus.target);
+       }
+       
+    else if(activePanel.equals("image"))
+    		{textField.setText(sourcestatus.source);
+        
+               target.setText(sourcestatus.target);}
+    else if(activePanel.equals("format"))
+    	   formatSource.setText(sourcestatus.source);
+    else
+    	wipeSource.setText(sourcestatus.source);}}
+}
+
